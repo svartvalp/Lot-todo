@@ -50,6 +50,16 @@ public class TodoServiceImpl implements TodoService {
 
     @Override
     public void deleteDto(Long id) {
+        User user = userDao.findByTodosContains(todoDao.findById(id).orElseThrow(() -> new EntityNotFoundException("Todo not found by id !")));
+        if(user == null) {
+            throw  new EntityNotFoundException("User not found associated with this todo!");
+        }
+        user.getTodos().removeIf(todo -> todo.getId().equals(id));
         todoDao.deleteById(id);
+    }
+
+    @Override
+    public void updateTodo(TodoDto todoDto) {
+        todoDao.save(modelMapper.map(todoDto, Todo.class));
     }
 }

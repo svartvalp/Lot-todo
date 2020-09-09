@@ -15,7 +15,7 @@ public class User {
     private Long id;
     private String username;
     private String password;
-    @OneToMany
+    @OneToMany(orphanRemoval = true)
     @JoinTable(schema = "lottodo", name = "user_todos",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "todo_id"))

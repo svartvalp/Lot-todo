@@ -13,7 +13,7 @@ public class Todo {
     @SequenceGenerator(sequenceName = "todo_id_seq", schema = "lottodo", name = "todo_id_seq", allocationSize = 1)
     private Long id;
     @Column(name = "is_done")
-    private Boolean isDone;
+    private boolean isDone;
     private String name;
     private String description;
 }

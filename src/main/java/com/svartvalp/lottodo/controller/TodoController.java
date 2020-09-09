@@ -35,4 +35,8 @@ public class TodoController {
         return todoService.findTodoById(id);
     }
 
+    @PutMapping(value = "/")
+    public void updateTodo(@RequestBody TodoDto todoDto) {
+        todoService.updateTodo(todoDto);
+    }
 }

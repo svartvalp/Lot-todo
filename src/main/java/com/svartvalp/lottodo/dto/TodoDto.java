@@ -8,7 +8,7 @@ import javax.validation.constraints.Size;
 @Data
 public class TodoDto {
     private Long id;
-    private Boolean isDone;
+    private boolean isDone;
     @NotNull
     @Size(min = 4, max = 50)
     private String name;
