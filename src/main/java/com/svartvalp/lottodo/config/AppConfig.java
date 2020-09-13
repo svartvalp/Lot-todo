@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.sql.DataSource;
 
@@ -16,7 +18,7 @@ import javax.sql.DataSource;
 @EnableJpaRepositories(basePackages = "com.svartvalp.lottodo.dao")
 @EnableTransactionManagement
 @Configuration
-public class AppConfig {
+public class AppConfig implements WebMvcConfigurer {
 
     private final Environment environment;
 
@@ -40,4 +42,12 @@ public class AppConfig {
         return modelMapper;
     }
 
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedMethods("*")
+                .allowedHeaders("*")
+                .allowedOrigins("*")
+                .allowCredentials(false);
+    }
 }

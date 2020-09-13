@@ -29,7 +29,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin().loginProcessingUrl("/login")
                 .successHandler((req, res, auth) -> res.setStatus(HttpServletResponse.SC_OK))
                 .failureHandler((req, res, auth) -> res.setStatus(HttpServletResponse.SC_UNAUTHORIZED))
-                .and().logout().logoutUrl("/logout");
+                .and()
+                .logout().logoutUrl("/logout")
+                .and().exceptionHandling()
+                .accessDeniedHandler((req, res, e) -> res.setStatus(HttpServletResponse.SC_UNAUTHORIZED))
+                .authenticationEntryPoint((req, res, e) -> res.setStatus(HttpServletResponse.SC_UNAUTHORIZED));
     }
 
     @Bean
