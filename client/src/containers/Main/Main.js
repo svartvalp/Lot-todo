@@ -15,7 +15,6 @@ function Main() {
     const [loginModal, setLoginModal] = useState(false)
     const [signError, setSignError] = useState(false)
     const [todos, setTodos] = useState([])
-    //const [showButtons, setShowButtons] = useState(null)
 
     const getUserId = () => {
         fetch('/user/info')
@@ -23,11 +22,9 @@ function Main() {
             .then(response => {
                 window.userId = response.id
                 setIsLoggedIn(true)
-                //setShowButtons(true)
                 setIsLoading(false)
             })
             .catch(error => {
-                //setShowButtons(true)
                 setIsLoading(false)
             })
     }
