@@ -1,0 +1,39 @@
+.Form {
+    display: flex;
+    padding: 0px;
+    justify-content: center;
+}
+
+.Submit-button {
+    margin: 0px;
+}
+
+.Error {
+    color: red;
+    font-size: 0.9rem;
+    margin: 5px;
+}
+
+.Description {
+    resize: none;
+    align-self: center;
+    width: 25%;
+    margin-top: 10px;
+    margin-left: 5px;
+}
+
+
+.Hint {
+    color: white;
+    margin-top: 75px;
+    margin-bottom: 15px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.InputForm {
+    border: 1px solid gray;
+    margin: 0px;
+    height: 35px;
+    color: black;
+    font-family: 'Montserrat', sans-serif;
+}

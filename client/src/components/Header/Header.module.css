@@ -1,0 +1,9 @@
+.ToolBar {
+    display: flex;
+    padding: 20px;
+    justify-content: space-between;
+}
+
+.Wrapper {
+    z-index: 100;
+}

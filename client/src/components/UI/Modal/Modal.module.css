@@ -1,0 +1,18 @@
+.Modal {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-self: center;
+    z-index: 500;
+    background-color: white;
+    min-width: 20%;
+    min-height: 50%;
+    border: 2px solid gray;
+    box-shadow: 13px 13px 5px 0px rgba(0,0,0,0.75);
+    padding: 20px 0px;
+    border-radius: 5px;
+    top: 30%;
+    box-sizing: border-box;
+    transition: all 0.3s ease-out;
+}
