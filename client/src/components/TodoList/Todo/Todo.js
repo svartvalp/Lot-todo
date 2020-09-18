@@ -5,11 +5,9 @@ import Context from "../../../Context";
 import Aux from "../../../hoc/Aux";
 
 const Todo = (props) => {
-    //const [isDoneTodo, setIsDoneTodo] = useState(props.isDone)
     const {deleteTodoHandler} = useContext(Context)
     const {toggleDoneHandler} = useContext(Context)
     const style = [classes.todoItem]
-    const wrapperStyle = [classes.Wrapper]
 
     if (props.done) {
         style.push(classes.todoItemDone)
@@ -22,6 +20,7 @@ const Todo = (props) => {
                     <li className={style.join(' ')}>
                         {props.index + ". " + props.name}
                         <input
+                            className={classes.Check}
                             type='checkbox'
                             onChange={(event) => toggleDoneHandler(props.id, props.name, props.description, props.done)}
                             checked={props.done}

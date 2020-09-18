@@ -4,15 +4,15 @@ import classes from './AddTodoForm.module.css'
 import Aux from "../../hoc/Aux";
 
 const AddTodoForm = (props) => {
-    const [inputTodo, setInputTodo] = useState('')
-    const [descriptionInput, setDescriptionInput] = useState('')
-    const [showDescription, setShowDescription] = useState(false)
+    const [inputTodo, setInputTodo] = useState('');
+    const [descriptionInput, setDescriptionInput] = useState('');
+    const [showDescription, setShowDescription] = useState(false);
 
     const descriptionChangeHandler = (event) => {
         setDescriptionInput(event.target.value)
     }
 
-    const errorWarning = props.addError ? (<p className={classes.Error}>ToDo should contain at lest 4 letters</p>) : null
+    const errorWarning = props.addError ? (<p className={classes.Error}>{props.addError}</p>) : null
     const arrowType = !showDescription ? (<i className="fas fa-angle-left"></i>) : (<i className="fas fa-angle-down"></i>)
     const textArea = showDescription ? (
         <textarea
@@ -33,6 +33,26 @@ const AddTodoForm = (props) => {
     }
 
     const submitTodoHandler = (event, inputTodo, descriptionInput) => {
+        if(inputTodo === "")
+        {
+            props.setAddingError('Todo should not be empty')
+            return
+        }
+        if(inputTodo.length < 4)
+        {
+            props.setAddingError('ToDo should contain at lest 4 letters')
+            return
+        }
+        if(inputTodo.length > 50)
+        {
+            props.setAddingError('ToDo should not contain more than 50 letters')
+            return
+        }
+        if(descriptionInput.length > 300)
+        {
+            props.setAddingError('ToDo description should not contain more than 300 letters')
+            return
+        }
         setInputTodo('')
         setDescriptionInput('')
         props.addTodoHandler(event, inputTodo, descriptionInput)

@@ -4,29 +4,31 @@ import Header from "../../components/Header/Header"
 import TodoBuilder from "../../containers/TodoBuilder/TodoBuilder";
 import RegistrationForm from "../../components/Forms/RegistrationForm/RegistrationForm";
 import SignInForm from '../../components/Forms/SignInForm/SignInForm'
+import UserService from "../../service/UserService";
+import TodoService from "../../service/TodoService";
 import Context from "../../Context";
-import Loader from "../../components/Loader/Loader"
-
 
 function Main() {
     const [isLoggedIn, setIsLoggedIn] = useState(false)
     const [signUpModal, setSignUpModal] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
     const [loginModal, setLoginModal] = useState(false)
-    const [signError, setSignError] = useState(false)
+    const [signError, setSignError] = useState(``)
     const [todos, setTodos] = useState([])
+    const [userId, setUserId] = useState('')
 
-    const getUserId = () => {
-        fetch('/user/info')
-            .then(response => response.json())
-            .then(response => {
-                window.userId = response.id
-                setIsLoggedIn(true)
-                setIsLoading(false)
-            })
-            .catch(error => {
-                setIsLoading(false)
-            })
+    const getUserId = async () => {
+        const response = await UserService.getUserId()
+        if (response) {
+            setUserId(response.id)
+            setIsLoggedIn(true)
+            setIsLoading(false)
+        }
+        else {
+            setIsLoggedIn(false)
+            setIsLoading(false)
+            setSignUpModal(true)
+        }
     }
 
     useEffect(() => {
@@ -35,99 +37,74 @@ function Main() {
 
     useEffect(() => {
         if (isLoggedIn) {
-            fetch(`/todo/user/${window.userId}`)
-                .then((response) => response.json())
-                .then(response => {
-                    setTodos(response);
-                })
-                .catch(error => {
-                    console.log(error);
-                })
+            TodoService.getTodos(isLoggedIn, userId, setTodos)
+            setSignUpModal(false)
         }
+        else {
+            setSignUpModal(true)
+            setUserId(null)
+            setTodos([])
+        }
+
     }, [isLoggedIn])
 
-    const submitSignUpHandler = useCallback((username, password) => {
-        fetch('/user/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json;charset=utf-8',
-            },
-            body: JSON.stringify({
-                "username": username,
-                "password": password
-            })
-        }).then((response) => {
-            if(response.ok) {
-
-                discardSignUp()
-                showLogInHandler()
-            }
-            else {
-                setSignError(true)
-                console.log(response.message)
-            }
-        }).catch((error) => {
-            console.log(error)
-        })
+    const submitSignUpHandler = useCallback(async (username, password) => {
+        const response = await UserService.submitSignUpHandler(username, password)
+        if (response) {
+            setSignError(response.split(';'))
+        }
+        else {
+            discardSignUp()
+            showLogInHandler()
+        }
     }, [])
 
-    const submitLogInHandler = useCallback((username, password) => {
-        const params = new URLSearchParams({
-            username: username,
-            password: password
-        })
-
-        const url = `/login?${ params.toString() }`
-
-        fetch(url, {
-            method: 'POST',
-        }).then((response) => {
-            if (response.ok) {
-                //setIsLoggedIn(true);
-                discardLogIn();
-                getUserId()
-            }
-            else {
-                setSignError(true)
-            }
-
-        }).catch((error) => {
-            console.log(error)
-        })
+    const submitLogInHandler = useCallback(async (username, password) => {
+        const response = await UserService.submitLogInHandler(username, password);
+        if (response === 200) {
+            discardLogIn();
+            getUserId()
+        }
+        else {
+            setSignError(response)
+        }
     }, [])
 
     const logOutHandler = () => {
-        fetch('/logout')
+        UserService.logOutHandler()
         setIsLoggedIn(false)
-        window.userId = null
-        setTodos([])
     }
 
     const showSignUpHandler = () => {
+        discardLogIn()
         setSignUpModal(true);
+        setSignError('');
     }
 
     const showLogInHandler = () => {
+        discardSignUp()
         setLoginModal(true);
+        setSignError('');
     }
 
-    const discardSignUp = () => {
+    const discardSignUp = (setUsername, setPassword) => {
         setSignUpModal(false);
-        setSignError(false);
+        setSignError('');
     }
 
     const discardLogIn = () => {
         setLoginModal(false);
-        setSignError(false);
+        setSignError('');
     }
 
+
     return (
-        <Context.Provider value={{isLoggedIn, isLoading}}>
+        <Context.Provider value={{isLoggedIn, isLoading, userId}}>
             <div className={classes.Main}>
-                <RegistrationForm canceled={discardSignUp} show={signUpModal} submit={submitSignUpHandler} err={signError}/>
-                <SignInForm  canceled={discardLogIn} show={loginModal} submit={submitLogInHandler} err={signError}/>
+                <RegistrationForm canceled={discardSignUp} show={signUpModal} submit={submitSignUpHandler} err={signError} logIn={showLogInHandler}/>
+                <SignInForm  canceled={discardLogIn} show={loginModal} submit={submitLogInHandler} err={signError} signUp={showSignUpHandler}/>
                 <Header showSignUp={showSignUpHandler} showLogin={showLogInHandler} logOut={logOutHandler}/>
-                <TodoBuilder todo={[todos, setTodos]} isLoggedIn={isLoggedIn}/>
+                <TodoBuilder todo={[todos, setTodos]} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>
             </div>
         </Context.Provider>
     );

@@ -15,11 +15,15 @@
     height: 1.8rem;
 }
 
+.Check {
+    margin-left: 15px;
+}
+
 .todoItem {
     display: flex;
     font-size: 1.5rem;
     justify-content: space-between;
-    padding: 0rem 0.8rem;
+    padding: 5px 0.8rem;
     background-color: black;
     border: 1px solid gray;
     border-bottom: none;
